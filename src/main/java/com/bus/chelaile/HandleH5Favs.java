@@ -5,8 +5,6 @@ package com.bus.chelaile;
  *
  */
 import com.bus.chelaile.ocsTest.CacheUtil;
-import com.bus.chelaile.ocsTest.cache.ICache;
-import com.bus.chelaile.ocsTest.cache.RedisCacheImplUtil;
 import com.bus.chelaile.thread.RequestWechatUnionIdThread;
 
 import java.io.*;
@@ -19,7 +17,7 @@ import org.slf4j.LoggerFactory;
 
 public class HandleH5Favs {
 
-	private static final int THREAD_COUNT = 1;
+	private static final int THREAD_COUNT = 10;
 	private static final ScheduledThreadPoolExecutor exec = new ScheduledThreadPoolExecutor(THREAD_COUNT);
 
 	static final Logger logger = LoggerFactory.getLogger(HandleH5Favs.class);
