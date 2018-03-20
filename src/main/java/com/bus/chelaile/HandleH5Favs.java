@@ -4,33 +4,26 @@ package com.bus.chelaile;
  * @author quekunkun
  *
  */
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
-import com.bus.chelaile.ocsTest.cache.ICache;
-import com.bus.chelaile.ocsTest.cache.OCSCacheUtil;
-import com.bus.chelaile.util.Utilities;
+import com.bus.chelaile.thread.RequestWechatUnionIdThread;
 
 import java.io.*;
 import java.util.*;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class HandleH5Favs {
 
+	private static final ScheduledThreadPoolExecutor exec = new ScheduledThreadPoolExecutor(10);
+	
 	static final Logger logger = LoggerFactory.getLogger(HandleH5Favs.class);
 	
 	static final int RECORDSIZE = 7;
-	static final String URLPOST = "https://api.weixin.qq.com/cgi-bin/user/info/batchget?access_token=%s";
-	static final String URLGET = "https://api.weixin.qq.com/cgi-bin/user/info?access_token=%s&openid=%s&lang=zh_CN";
 
-	static ICache client1 = new OCSCacheUtil("d960fa96e23843f0.m.cnhzaliqshpub001.ocs.aliyuncs.com", "11211",
-			"d960fa96e23843f0", "Chelaileocs2015");
-	static ICache client2 = new OCSCacheUtil("9c0e27d0f09544c9.m.cnhzaliqshpub001.ocs.aliyuncs.com", "11211",
-			"9c0e27d0f09544c9", "Yuanguang2014");
 	static final Set<String> OPENIDSET = new HashSet<String>(); // all openids
 	static final Set<String> lines = new HashSet<String>(); // all records
-	static final Map<String, String> OPENID_UNIONID = new HashMap<String, String>(); // openId-->unionId#type
+	public static final Map<String, String> OPENID_UNIONID = new HashMap<String, String>(); // openId-->unionId#type
 																						// //type:
 																						// 1
 																						// 公众号，
@@ -56,6 +49,7 @@ public class HandleH5Favs {
 			fileOut = args[1];
 		if(args.length >= 3)
 			isDebug = Boolean.parseBoolean(args[2]);
+			
 		System.out.println("fileIn=" + fileIn + ", fileOut=" + fileOut + ",  isDebug=" + isDebug);
 //		PropertyConfigurator.configure(".\\src\\log4j.properties");
 //		logger.info("日志测试！！！！！！！");
@@ -101,10 +95,10 @@ public class HandleH5Favs {
 				writer.flush();
 			} else {
 				notHandleN++;
-				writerNoUnion.write(sl[0] + "#" + "0" + "#" + sl[1] + "#" + sl[2] + "#" + sl[3] + "#"
-						+ sl[4] + "#" + sl[5] + "#" + sl[6]);
-				writer.newLine();
-				writer.flush();
+//				writerNoUnion.write(sl[0] + "#" + "0" + "#" + sl[1] + "#" + sl[2] + "#" + sl[3] + "#"
+//						+ sl[4] + "#" + sl[5] + "#" + sl[6]);
+//				writerNoUnion.newLine();
+//				writerNoUnion.flush();
 			}
 		}
 		writer.close();
@@ -119,38 +113,11 @@ public class HandleH5Favs {
 	 * @param openidset2
 	 */
 	private static void getOpenIdUnionId() {
-		// openidunion2.put("ozKKGuBw5F3Vs6XpUza9LEAH3bJc", "1231231231321213");
 		for (String openId : OPENIDSET) {
-			// System.out.println(client.get("WECHATSIGNATUREACCESSTOKEN"));
-			// String url = String.format(URL,
-			// client.get("WECHATSIGNATUREACCESSTOKEN"));
 
-			int type = 1;
-			String w1Token = (String) client1.get("WECHATSIGNATUREACCESSTOKEN");
-			String url = String.format(URLGET, w1Token, openId);
-			String response = Utilities.newHttpGet(url);
-			JSONObject resJ = JSON.parseObject(response);
-			System.out.println("response=" + response);
-			String errorcode = resJ.getString("errcode");
-			String unionId = resJ.getString("unionid");
-			if (errorcode != null || unionId == null) {
-				type = 2;
-				String w2Token = (String) client2.get("WECHATSIGNATUREACCESSTOKEN");
-				url = String.format(URLGET, w2Token, openId);
-				response = Utilities.newHttpGet(url);
-				resJ = JSON.parseObject(response);
-				
-				if(isDebug)
-					System.out.println("response=" + response);
-				
-				errorcode = resJ.getString("errcode");
-				unionId = resJ.getString("unionid");
-				if (errorcode != null || unionId == null) {
-					continue;
-				}
-			}
-
-			OPENID_UNIONID.put(openId, unionId + "#" + type);
+			RequestWechatUnionIdThread reqThread = new RequestWechatUnionIdThread(openId, isDebug);
+			exec.execute(reqThread);
+			
 		}
 	}
 
