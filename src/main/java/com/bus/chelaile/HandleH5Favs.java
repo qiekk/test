@@ -19,7 +19,7 @@ import org.slf4j.LoggerFactory;
 
 public class HandleH5Favs {
 
-	private static final int THREAD_COUNT = 10;
+	private static final int THREAD_COUNT = 1;
 	private static final ScheduledThreadPoolExecutor exec = new ScheduledThreadPoolExecutor(THREAD_COUNT);
 
 	static final Logger logger = LoggerFactory.getLogger(HandleH5Favs.class);
