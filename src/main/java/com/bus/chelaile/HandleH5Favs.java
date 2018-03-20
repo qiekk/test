@@ -32,7 +32,7 @@ public class HandleH5Favs {
 
 	public static void main(String[] args) throws Exception {
 		System.out.println("1111111111111");
-		handleFavFile();
+//		handleFavFile();
 
 		System.exit(1);
 	}
