@@ -38,9 +38,18 @@ public class HandleH5Favs {
 	static BufferedWriter writer;
 	static String fileIn = "/data/quekunkun/favzhuanyi/favFile.txt";
 	static String fileOut = "/data/quekunkun/favzhuanyi/favout.txt";
+	static boolean isDebug = false;
 
 	public static void main(String[] args) throws Exception {
 		System.out.println("1111111111111");
+		System.out.println(args.length);
+		if(args.length >= 1)
+			fileIn = args[0];
+		if(args.length >= 2)
+			fileOut = args[1];
+		if(args.length >= 3)
+			isDebug = Boolean.parseBoolean(args[2]);
+		System.out.println("fileIn=" + fileIn + ", fileOut=" + fileOut + ",  isDebug=" + isDebug);
 		handleFavFile();
 
 		System.exit(1);
@@ -117,7 +126,10 @@ public class HandleH5Favs {
 				url = String.format(URLGET, w2Token, openId);
 				response = Utilities.newHttpGet(url);
 				resJ = JSON.parseObject(response);
-				System.out.println("response=" + response);
+				
+				if(isDebug)
+					System.out.println("response=" + response);
+				
 				errorcode = resJ.getString("errcode");
 				unionId = resJ.getString("unionid");
 				if (errorcode != null || unionId == null) {
