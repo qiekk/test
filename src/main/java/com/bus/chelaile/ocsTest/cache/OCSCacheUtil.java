@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory;
 
 
 
+
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
@@ -195,6 +196,16 @@ public class OCSCacheUtil implements ICache{
 	}
 
 	public Set<String> zrevRangeByScore(String key, double endScore, double startScore, int count) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public void lpush(String key, String value) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public String lpop(String key) {
 		// TODO Auto-generated method stub
 		return null;
 	}

@@ -4,10 +4,13 @@ package com.bus.chelaile;
  * @author quekunkun
  *
  */
+import com.bus.chelaile.ocsTest.cache.ICache;
+import com.bus.chelaile.ocsTest.cache.RedisCacheImplUtil;
 import com.bus.chelaile.thread.RequestWechatUnionIdThread;
 
 import java.io.*;
 import java.util.*;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 
 import org.slf4j.Logger;
@@ -15,22 +18,26 @@ import org.slf4j.LoggerFactory;
 
 public class HandleH5Favs {
 
-	private static final ScheduledThreadPoolExecutor exec = new ScheduledThreadPoolExecutor(10);
-	
+	private static final int THREAD_COUNT = 10;
+	private static final ScheduledThreadPoolExecutor exec = new ScheduledThreadPoolExecutor(THREAD_COUNT);
+
 	static final Logger logger = LoggerFactory.getLogger(HandleH5Favs.class);
-	
+
 	static final int RECORDSIZE = 7;
 
 	static final Set<String> OPENIDSET = new HashSet<String>(); // all openids
 	static final Set<String> lines = new HashSet<String>(); // all records
 	public static final Map<String, String> OPENID_UNIONID = new HashMap<String, String>(); // openId-->unionId#type
-																						// //type:
-																						// 1
-																						// 公众号，
-																						// 2
-																						// 小程序
+	// //type:
+	// 1
+	// 公众号，
+	// 2
+	// 小程序
 	static final Set<String> KEYS = new HashSet<String>(); // 去重用 ,
 															// unionId+cityId+lineId+stopName+nextStopName
+
+	static ICache clientRedis = new RedisCacheImplUtil("127.0.0.1", 6379);
+	public static final String POPKEY = "FAV_KEY";
 
 	static BufferedReader reader;
 	static BufferedWriter writer;
@@ -43,16 +50,16 @@ public class HandleH5Favs {
 	public static void main(String[] args) throws Exception {
 		System.out.println("1111111111111");
 		System.out.println(args.length);
-		if(args.length >= 1)
+		if (args.length >= 1)
 			fileIn = args[0];
-		if(args.length >= 2)
+		if (args.length >= 2)
 			fileOut = args[1];
-		if(args.length >= 3)
+		if (args.length >= 3)
 			isDebug = Boolean.parseBoolean(args[2]);
-			
+
 		System.out.println("fileIn=" + fileIn + ", fileOut=" + fileOut + ",  isDebug=" + isDebug);
-//		PropertyConfigurator.configure(".\\src\\log4j.properties");
-//		logger.info("日志测试！！！！！！！");
+		// PropertyConfigurator.configure(".\\src\\log4j.properties");
+		// logger.info("日志测试！！！！！！！");
 		handleFavFile();
 
 		System.exit(1);
@@ -77,6 +84,11 @@ public class HandleH5Favs {
 			OPENIDSET.add(bufS[0]);
 		}
 		reader.close();
+		// redis duoxiancheng
+		for (String s : OPENIDSET) {
+			clientRedis.lpush(POPKEY, s);
+		}
+		System.out.println("totalN=" + totalN);
 
 		// 调微信接口，openId对应unionId
 		getOpenIdUnionId();
@@ -88,17 +100,17 @@ public class HandleH5Favs {
 				if (sl[6].equalsIgnoreCase("NULL")) {
 					sl[6] = "0";
 				}
-				writer.write(OPENID_UNIONID.get(sl[0]) + "#" + sl[1] + "#" + sl[2] + "#" + sl[3] + "#"
-						+ sl[4] + "#" + sl[5] + "#" + sl[6]);
+				writer.write(OPENID_UNIONID.get(sl[0]) + "#" + sl[1] + "#" + sl[2] + "#" + sl[3] + "#" + sl[4] + "#"
+						+ sl[5] + "#" + sl[6]);
 				handleN++;
 				writer.newLine();
 				writer.flush();
 			} else {
 				notHandleN++;
-//				writerNoUnion.write(sl[0] + "#" + "0" + "#" + sl[1] + "#" + sl[2] + "#" + sl[3] + "#"
-//						+ sl[4] + "#" + sl[5] + "#" + sl[6]);
-//				writerNoUnion.newLine();
-//				writerNoUnion.flush();
+				writerNoUnion.write(sl[0] + "#" + "0" + "#" + sl[1] + "#" + sl[2] + "#" + sl[3] + "#" + sl[4] + "#"
+						+ sl[5] + "#" + sl[6]);
+				writerNoUnion.newLine();
+				writerNoUnion.flush();
 			}
 		}
 		writer.close();
@@ -113,11 +125,19 @@ public class HandleH5Favs {
 	 * @param openidset2
 	 */
 	private static void getOpenIdUnionId() {
-		for (String openId : OPENIDSET) {
 
-			RequestWechatUnionIdThread reqThread = new RequestWechatUnionIdThread(openId, isDebug);
-			exec.execute(reqThread);
-			
+		// 多线程
+		int c = THREAD_COUNT;
+		final CountDownLatch latch = new CountDownLatch(c);
+		for (int i = 0; i < c; i++) {
+			exec.execute(new RequestWechatUnionIdThread(isDebug, latch, i));
+		}
+
+		try {
+			// 等待所有线程计算完毕
+			latch.await();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
 		}
 	}
 
