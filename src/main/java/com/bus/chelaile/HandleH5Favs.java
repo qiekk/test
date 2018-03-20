@@ -17,8 +17,7 @@ import org.slf4j.LoggerFactory;
 
 public class HandleH5Favs {
 
-	private static final int THREAD_COUNT = 10;
-	private static final ScheduledThreadPoolExecutor exec = new ScheduledThreadPoolExecutor(THREAD_COUNT);
+	private static int THREAD_COUNT = 100;
 
 	static final Logger logger = LoggerFactory.getLogger(HandleH5Favs.class);
 
@@ -55,16 +54,19 @@ public class HandleH5Favs {
 			fileOut = args[1];
 		if (args.length >= 3)
 			isDebug = Boolean.parseBoolean(args[2]);
+		if (args.length >= 4)
+			THREAD_COUNT = Integer.parseInt(args[3]);
 
+		ScheduledThreadPoolExecutor exec = new ScheduledThreadPoolExecutor(THREAD_COUNT);
 		System.out.println("fileIn=" + fileIn + ", fileOut=" + fileOut + ",  isDebug=" + isDebug);
 		// PropertyConfigurator.configure(".\\src\\log4j.properties");
 		// logger.info("日志测试！！！！！！！");
-		handleFavFile();
+		handleFavFile(exec);
 
 		System.exit(1);
 	}
 
-	private static void handleFavFile() throws UnsupportedEncodingException, FileNotFoundException, IOException {
+	private static void handleFavFile(ScheduledThreadPoolExecutor exec) throws UnsupportedEncodingException, FileNotFoundException, IOException {
 		reader = new BufferedReader(new InputStreamReader(new FileInputStream(fileIn), "utf-8"));
 		writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(fileOut), "utf-8"));
 		writerNoUnion = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(fileNoUnion), "utf-8"));
@@ -90,7 +92,7 @@ public class HandleH5Favs {
 		System.out.println("totalN=" + totalN);
 
 		// 调微信接口，openId对应unionId
-		getOpenIdUnionId();
+		getOpenIdUnionId(exec);
 
 		// 生成新串，写文件
 		for (String line : lines) {
@@ -123,7 +125,7 @@ public class HandleH5Favs {
 	 * @param openidunion2
 	 * @param openidset2
 	 */
-	private static void getOpenIdUnionId() {
+	private static void getOpenIdUnionId(ScheduledThreadPoolExecutor exec) {
 
 		// 多线程
 		int c = THREAD_COUNT;
