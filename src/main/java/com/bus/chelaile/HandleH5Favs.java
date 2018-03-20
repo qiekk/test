@@ -97,19 +97,31 @@ public class HandleH5Favs {
 		// 生成新串，写文件
 		for (String line : lines) {
 			String sl[] = line.split("#");
+			if (sl[6].equalsIgnoreCase("NULL")) {
+				sl[6] = "0";
+			}
 			if (OPENID_UNIONID.containsKey(sl[0])) {
-				if (sl[6].equalsIgnoreCase("NULL")) {
-					sl[6] = "0";
-				}
-				writer.write(OPENID_UNIONID.get(sl[0]) + "#" + sl[1] + "#" + sl[2] + "#" + sl[3] + "#" + sl[4] + "#"
-						+ sl[5] + "#" + sl[6]);
+				String key = OPENID_UNIONID.get(sl[0]).split("#")[0] + sl[1] + sl[2] + sl[3] + sl[4];
+				if(KEYS.contains(key))
+					continue;
+				
+				String record = OPENID_UNIONID.get(sl[0]) + "#" + sl[1] + "#" + sl[2] + "#" + sl[3] + "#" + sl[4] + "#"
+						+ sl[5] + "#" + sl[6];
+				KEYS.add(key);
+				writer.write(record);
 				handleN++;
 				writer.newLine();
 				writer.flush();
 			} else {
 				notHandleN++;
-				writerNoUnion.write(sl[0] + "#" + "0" + "#" + sl[1] + "#" + sl[2] + "#" + sl[3] + "#" + sl[4] + "#"
-						+ sl[5] + "#" + sl[6]);
+				String key = sl[0] + sl[1] + sl[2] + sl[3] + sl[4];
+				String record = sl[0] + "#" + "0" + "#" + sl[1] + "#" + sl[2] + "#" + sl[3] + "#" + sl[4] + "#"
+						+ sl[5] + "#" + sl[6];
+				if(KEYS.contains(key))
+					continue;
+				
+				KEYS.add(key);
+				writerNoUnion.write(record);
 				writerNoUnion.newLine();
 				writerNoUnion.flush();
 			}
