@@ -41,8 +41,10 @@ public class HandleH5Favs {
 
 	static BufferedReader reader;
 	static BufferedWriter writer;
+	static BufferedWriter writerNoUnion;
 	static String fileIn = "/data/quekunkun/favzhuanyi/favFile.txt";
 	static String fileOut = "/data/quekunkun/favzhuanyi/favout.txt";
+	static String fileNoUnion = "/data/quekunkun/favzhuanyi/nounion.txt";
 	static boolean isDebug = false;
 
 	public static void main(String[] args) throws Exception {
@@ -65,6 +67,7 @@ public class HandleH5Favs {
 	private static void handleFavFile() throws UnsupportedEncodingException, FileNotFoundException, IOException {
 		reader = new BufferedReader(new InputStreamReader(new FileInputStream(fileIn), "utf-8"));
 		writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(fileOut), "utf-8"));
+		writerNoUnion = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(fileNoUnion), "utf-8"));
 		int handleN = 0;
 		int notHandleN = 0;
 		int totalN = 0;
@@ -91,14 +94,17 @@ public class HandleH5Favs {
 				if (sl[6].equalsIgnoreCase("NULL")) {
 					sl[6] = "0";
 				}
-				writer.write(OPENID_UNIONID.get(sl[0]) + "#" + "#" + sl[1] + "#" + sl[2] + "#" + sl[3] + "#"
+				writer.write(OPENID_UNIONID.get(sl[0]) + "#" + sl[1] + "#" + sl[2] + "#" + sl[3] + "#"
 						+ sl[4] + "#" + sl[5] + "#" + sl[6]);
 				handleN++;
 				writer.newLine();
 				writer.flush();
 			} else {
 				notHandleN++;
-				System.out.println("no union id ,openId=" + sl[0]);
+				writerNoUnion.write(sl[0] + "#" + "0" + "#" + sl[1] + "#" + sl[2] + "#" + sl[3] + "#"
+						+ sl[4] + "#" + sl[5] + "#" + sl[6]);
+				writer.newLine();
+				writer.flush();
 			}
 		}
 		writer.close();
