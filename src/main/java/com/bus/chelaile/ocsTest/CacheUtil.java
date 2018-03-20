@@ -24,6 +24,7 @@ public class CacheUtil {
 				"Yuanguang2014");
 		redisClient = new RedisCacheImplUtil("127.0.0.1", 6379);
 
+		System.out.println("cache init 成功 **********************");
 		isInitSuccess = true;
 	}
 

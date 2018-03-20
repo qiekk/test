@@ -4,6 +4,7 @@ package com.bus.chelaile;
  * @author quekunkun
  *
  */
+import com.bus.chelaile.ocsTest.CacheUtil;
 import com.bus.chelaile.ocsTest.cache.ICache;
 import com.bus.chelaile.ocsTest.cache.RedisCacheImplUtil;
 import com.bus.chelaile.thread.RequestWechatUnionIdThread;
@@ -36,7 +37,6 @@ public class HandleH5Favs {
 	static final Set<String> KEYS = new HashSet<String>(); // 去重用 ,
 															// unionId+cityId+lineId+stopName+nextStopName
 
-	static ICache clientRedis = new RedisCacheImplUtil("127.0.0.1", 6379);
 	public static final String POPKEY = "FAV_KEY";
 
 	static BufferedReader reader;
@@ -48,6 +48,7 @@ public class HandleH5Favs {
 	static boolean isDebug = false;
 
 	public static void main(String[] args) throws Exception {
+		CacheUtil.initClient();
 		System.out.println("1111111111111");
 		System.out.println(args.length);
 		if (args.length >= 1)
@@ -86,7 +87,7 @@ public class HandleH5Favs {
 		reader.close();
 		// redis duoxiancheng
 		for (String s : OPENIDSET) {
-			clientRedis.lpush(POPKEY, s);
+			CacheUtil.lPush(POPKEY, s);
 		}
 		System.out.println("totalN=" + totalN);
 
