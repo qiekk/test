@@ -47,7 +47,9 @@ public class RequestWechatUnionIdThread implements Runnable {
 				String url = String.format(URLGET, w1Token, openId);
 				String response = Utilities.newHttpGet(url);
 				JSONObject resJ = JSON.parseObject(response);
-				System.out.println("response=" + response);
+				if(debug)
+					System.out.println("response=" + response);
+				
 				String errorcode = resJ.getString("errcode");
 				String unionId = resJ.getString("unionid");
 				if (errorcode != null || unionId == null) {
@@ -63,7 +65,7 @@ public class RequestWechatUnionIdThread implements Runnable {
 					errorcode = resJ.getString("errcode");
 					unionId = resJ.getString("unionid");
 					if (errorcode != null || unionId == null) {
-						return;
+						continue;
 					}
 				}
 				// bu kaolv ziyuan chongtu

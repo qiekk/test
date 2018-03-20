@@ -17,9 +17,11 @@ public class CacheUtil {
 			System.out.println("已经 initCache 成功");
 			return;
 		}
-
+		// gongzhonghao  ocs online
 		client1 = new OCSCacheUtil("d960fa96e23843f0.m.cnhzaliqshpub001.ocs.aliyuncs.com", "11211", "d960fa96e23843f0",
 				"Chelaileocs2015");
+		
+		// 
 		client2 = new OCSCacheUtil("9c0e27d0f09544c9.m.cnhzaliqshpub001.ocs.aliyuncs.com", "11211", "9c0e27d0f09544c9",
 				"Yuanguang2014");
 		redisClient = new RedisCacheImplUtil("127.0.0.1", 6379);
