@@ -76,7 +76,7 @@
 							<goal>java</goal>
 						</goals>
 						<configuration>
-							<mainClass>com.bus.chelaile.HandleH5Favs</mainClass>
+							<mainClass>com.bus.chelaile.HandleH5Favs1</mainClass>
 							<arguments>
 								<argument>arg0</argument>
 								<argument>arg1</argument>
