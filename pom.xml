@@ -77,10 +77,12 @@
 						</goals>
 						<configuration>
 							<mainClass>com.bus.chelaile.HandleH5Favs</mainClass>
+							<!-- 
 							<arguments>
 								<argument>arg0</argument>
 								<argument>arg1</argument>
 							</arguments>
+							-->
 						</configuration>
 					</execution>
 				</executions>

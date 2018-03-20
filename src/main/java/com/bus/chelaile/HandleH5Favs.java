@@ -13,8 +13,13 @@ import com.bus.chelaile.util.Utilities;
 import java.io.*;
 import java.util.*;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class HandleH5Favs {
 
+	static final Logger logger = LoggerFactory.getLogger(HandleH5Favs.class);
+	
 	static final int RECORDSIZE = 7;
 	static final String URLPOST = "https://api.weixin.qq.com/cgi-bin/user/info/batchget?access_token=%s";
 	static final String URLGET = "https://api.weixin.qq.com/cgi-bin/user/info?access_token=%s&openid=%s&lang=zh_CN";
@@ -50,6 +55,8 @@ public class HandleH5Favs {
 		if(args.length >= 3)
 			isDebug = Boolean.parseBoolean(args[2]);
 		System.out.println("fileIn=" + fileIn + ", fileOut=" + fileOut + ",  isDebug=" + isDebug);
+//		PropertyConfigurator.configure(".\\src\\log4j.properties");
+//		logger.info("日志测试！！！！！！！");
 		handleFavFile();
 
 		System.exit(1);
@@ -84,7 +91,7 @@ public class HandleH5Favs {
 				if (sl[6].equalsIgnoreCase("NULL")) {
 					sl[6] = "0";
 				}
-				writer.write(OPENID_UNIONID.get(sl[0]) + "#" + sl[0] + "#" + sl[1] + "#" + sl[2] + "#" + sl[3] + "#"
+				writer.write(OPENID_UNIONID.get(sl[0]) + "#" + "#" + sl[1] + "#" + sl[2] + "#" + sl[3] + "#"
 						+ sl[4] + "#" + sl[5] + "#" + sl[6]);
 				handleN++;
 				writer.newLine();

@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE log4j:configuration
+PUBLIC "-//log4j/log4j Configuration//EN"
+"log4j.dtd">
+<log4j:configuration>
+
+  <appender name="STDOUT" class="org.apache.log4j.ConsoleAppender">
+    <layout class="org.apache.log4j.PatternLayout">
+      <param name="ConversionPattern" value="%d %-5p %c.%M:%L -%m%n" />
+    </layout>
+  </appender>
+
+  <appender name="DAILYFILE" class="org.apache.log4j.DailyRollingFileAppender">
+    <param name="file" value="D:\bus.log" />
+    <param name="Encoding" value="UTF-8" />
+    <param name="append" value="true" />
+    <param name="datePattern" value="'.'yyyy-MM-dd" />
+    <layout class="org.apache.log4j.PatternLayout">
+      <param name="ConversionPattern" value="%d %-5p %c.%M:%L -%m%n" />
+    </layout>
+  </appender>
+  <!--
+  <appender name="DAILYFILE_async" class="org.apache.log4j.AsyncAppender">
+    <appender-ref ref="DAILYFILE" />
+    <param name="bufferSize" value="5000" />
+    <param name="blocking" value="false" />
+  </appender>
+  -->
+
+  <appender name="MEMCACHED" class="org.apache.log4j.DailyRollingFileAppender">
+    <param name="file" value="/data/logs/memcached.log" />
+    <param name="append" value="true" />
+    <param name="datePattern" value="'.'yyyy-MM-dd" />
+    <layout class="org.apache.log4j.PatternLayout">
+      <param name="ConversionPattern" value="%d %m%n" />
+    </layout>
+  </appender>
+  <appender name="MEMCACHED_async" class="org.apache.log4j.AsyncAppender">
+    <appender-ref ref="MEMCACHED" />
+    <param name="bufferSize" value="5000" />
+    <param name="blocking" value="false" />
+  </appender>
+
+  <appender name="DAYENDFILE" class="org.apache.log4j.DailyRollingFileAppender">
+    <param name="file" value="/data/logs/bus_dayend.log" />
+    <param name="append" value="true" />
+    <param name="datePattern" value="'.'yyyy-MM-dd" />
+    <layout class="org.apache.log4j.PatternLayout">
+      <param name="ConversionPattern" value="%d %-5p %c.%M:%L -%m%n" />
+    </layout>
+  </appender>
+  <appender name="DAYENDFILE_async" class="org.apache.log4j.AsyncAppender">
+    <appender-ref ref="DAYENDFILE" />
+    <param name="bufferSize" value="5000" />
+    <param name="blocking" value="false" />
+  </appender>
+
+  <appender name="RULELOG" class="org.apache.log4j.DailyRollingFileAppender">
+    <param name="file" value="/data/logs/bus_rulelog.log" />
+    <param name="append" value="true" />
+    <param name="datePattern" value="'.'yyyy-MM-dd" />
+    <layout class="org.apache.log4j.PatternLayout">
+      <param name="ConversionPattern" value="%d %-5p %c.%M:%L -%m%n" />
+    </layout>
+  </appender>
+  <appender name="RULELOG_async" class="org.apache.log4j.AsyncAppender">
+    <appender-ref ref="RULELOG" />
+    <param name="bufferSize" value="5000" />
+    <param name="blocking" value="false" />
+  </appender>
+
+  <appender name="STATISTIC" class="org.apache.log4j.DailyRollingFileAppender">
+    <param name="file" value="/data/logs/bus_sta.log" />
+    <param name="append" value="true" />
+    <param name="datePattern" value="'.'yyyy-MM-dd" />
+    <layout class="org.apache.log4j.PatternLayout">
+      <param name="ConversionPattern" value="%d|%m%n" />
+    </layout>
+  </appender>
+  <appender name="STATISTIC_async" class="org.apache.log4j.AsyncAppender">
+    <appender-ref ref="STATISTIC" />
+    <param name="bufferSize" value="5000" />
+    <param name="blocking" value="false" />
+  </appender>
+
+  <appender name="SNAPSHOT" class="org.apache.log4j.DailyRollingFileAppender">
+    <param name="file" value="/data/logs/bus_snapshot.log" />
+    <param name="append" value="true" />
+    <param name="datePattern" value="'.'yyyy-MM-dd" />
+    <layout class="org.apache.log4j.PatternLayout">
+      <param name="ConversionPattern" value="%m%n" />
+    </layout>
+  </appender>
+  <appender name="SNAPSHOT_async" class="org.apache.log4j.AsyncAppender">
+    <appender-ref ref="SNAPSHOT" />
+    <param name="bufferSize" value="5000" />
+    <param name="blocking" value="false" />
+  </appender>
+
+  <appender name="LOGCMDFILE" class="org.apache.log4j.DailyRollingFileAppender">
+    <param name="file" value="/data/logs/bus_logcmd.log" />
+    <param name="append" value="true" />
+    <param name="datePattern" value="'.'yyyy-MM-dd" />
+    <layout class="org.apache.log4j.PatternLayout">
+      <param name="ConversionPattern" value="%d %m%n" />
+    </layout>
+  </appender>
+  <appender name="LOGCMDFILE_async" class="org.apache.log4j.AsyncAppender">
+    <appender-ref ref="LOGCMDFILE" />
+    <param name="bufferSize" value="5000" />
+    <param name="blocking" value="false" />
+  </appender>
+
+  <appender name="FEEDBACK" class="org.apache.log4j.DailyRollingFileAppender">
+    <param name="file" value="/data/logs/bus_feedback.log" />
+    <param name="append" value="true" />
+    <param name="datePattern" value="'.'yyyy-MM-dd" />
+    <layout class="org.apache.log4j.PatternLayout">
+      <param name="ConversionPattern" value="%d|%m%n" />
+    </layout>
+  </appender>
+  <appender name="FEEDBACK_async" class="org.apache.log4j.AsyncAppender">
+    <appender-ref ref="FEEDBACK" />
+    <param name="bufferSize" value="5000" />
+    <param name="blocking" value="false" />
+  </appender>
+
+  <category name="org" additivity="false">
+    <level value="ERROR" />
+    <appender-ref ref="DAILYFILE_async" />
+  </category>
+  <category name="com.bus" additivity="false">
+    <level value="INFO" />
+    <appender-ref ref="DAILYFILE" />
+  </category>
+  <category name="com.bus.service.dayend" additivity="false">
+    <level value="INFO" />
+    <appender-ref ref="DAYENDFILE_async" />
+  </category>
+  <category name="com.bus.service.command.ctl" additivity="false">
+    <level value="INFO" />
+    <appender-ref ref="LOGCMDFILE_async" />
+  </category>
+  <category name="com.bus.service.command.logcmdimpl" additivity="false">
+    <level value="INFO" />
+    <appender-ref ref="LOGCMDFILE_async" />
+  </category>
+  <category name="com.bus.service.command.deal.rule.impl" additivity="false">
+    <level value="INFO" />
+    <appender-ref ref="RULELOG_async" />
+  </category>
+
+  <logger name="com.bus.utils.OCSUtil" additivity="false">
+    <level value="ERROR" />
+    <appender-ref ref="MEMCACHED_async" />
+  </logger>
+  <logger name="com.bus.service.datafac.BusOnlineSnapshotThread" additivity="false">
+    <level value="INFO" />
+    <appender-ref ref="SNAPSHOT_async" />
+  </logger>
+  <logger name="com.bus.interceptor.VersionInterceptor" additivity="false">
+    <level value="INFO" />
+    <appender-ref ref="STATISTIC_async" />
+  </logger>
+  <logger name="com.bus.action.BusFeedbackAction" additivity="false">
+    <level value="INFO" />
+    <appender-ref ref="FEEDBACK_async" />
+  </logger>
+  <root>
+    <!-- <level value="WARN"> -->
+    <level value="WARN">
+    </level>
+  </root>
+
+</log4j:configuration>
