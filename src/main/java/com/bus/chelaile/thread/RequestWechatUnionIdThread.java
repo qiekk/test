@@ -31,7 +31,7 @@ public class RequestWechatUnionIdThread implements Runnable {
 	}
 
 	public void run() {
-		System.out.println("******************* thread num = " + i);
+		System.out.println("start thread num = " + i);
 		int count = 0;
 
 		try {
@@ -101,7 +101,7 @@ public class RequestWechatUnionIdThread implements Runnable {
 		// 生成新串，写文件
 		int handleN = 0;
 		int notHandleN = 0;
-		String fileOut = "/data/quekunkun/favzhuanyi/favout.txt";
+		String fileOut = "/data/quekunkun/favzhuanyi/favOut.txt";
 		String fileNoUnion = "/data/quekunkun/favzhuanyi/nounion.txt";
 		BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(fileOut), "utf-8"));
 		BufferedWriter writerNoUnion = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(fileNoUnion), "utf-8"));
