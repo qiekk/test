@@ -65,7 +65,7 @@ public class HandleH5Favs {
 		// logger.info("日志测试！！！！！！！");
 		handleFavFile(exec);
 
-		System.exit(1);
+//		System.exit(1);
 	}
 
 	private static void handleFavFile(ScheduledThreadPoolExecutor exec) throws UnsupportedEncodingException, FileNotFoundException, IOException {
