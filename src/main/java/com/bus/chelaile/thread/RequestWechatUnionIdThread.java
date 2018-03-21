@@ -4,8 +4,6 @@
  */
 package com.bus.chelaile.thread;
 
-import java.util.concurrent.CountDownLatch;
-
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.bus.chelaile.HandleH5Favs;
@@ -18,12 +16,12 @@ public class RequestWechatUnionIdThread implements Runnable {
 	static final String URLGET = "https://api.weixin.qq.com/cgi-bin/user/info?access_token=%s&openid=%s&lang=zh_CN";
 
 	private boolean debug;
-	private CountDownLatch cntLatch;
+//	private CountDownLatch cntLatch;
 	private int i ;
 
-	public RequestWechatUnionIdThread(boolean Debug, CountDownLatch cntLatch, int i) {
+	public RequestWechatUnionIdThread(boolean Debug, int i) {
 		this.debug = Debug;
-		this.cntLatch = cntLatch;
+//		this.cntLatch = cntLatch;
 		this.i = i;
 	}
 
@@ -84,9 +82,7 @@ public class RequestWechatUnionIdThread implements Runnable {
 			System.out.println("############## thread num over ,i = " + i );
 		} catch (Exception e1) {
 			e1.printStackTrace();
-		} finally {
-			cntLatch.countDown();
-		}
+		} 
 	}
 
 	public boolean isDebug() {
@@ -97,13 +93,13 @@ public class RequestWechatUnionIdThread implements Runnable {
 		this.debug = debug;
 	}
 
-	public CountDownLatch getCntLatch() {
-		return cntLatch;
-	}
-
-	public void setCntLatch(CountDownLatch cntLatch) {
-		this.cntLatch = cntLatch;
-	}
+//	public CountDownLatch getCntLatch() {
+//		return cntLatch;
+//	}
+//
+//	public void setCntLatch(CountDownLatch cntLatch) {
+//		this.cntLatch = cntLatch;
+//	}
 
 	public int getI() {
 		return i;

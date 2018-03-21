@@ -9,7 +9,6 @@ import com.bus.chelaile.thread.RequestWechatUnionIdThread;
 
 import java.io.*;
 import java.util.*;
-import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 
 import org.slf4j.Logger;
@@ -96,6 +95,7 @@ public class HandleH5Favs {
 			writerCopy.newLine();
 			writerCopy.flush();
 		}
+		writerCopy.close();
 		reader.close();
 		// redis duoxiancheng
 		for (String s : OPENIDSET) {
@@ -154,17 +154,17 @@ public class HandleH5Favs {
 
 		// 多线程
 		int c = THREAD_COUNT;
-		final CountDownLatch latch = new CountDownLatch(c);
+//		final CountDownLatch latch = new CountDownLatch(c);
 		for (int i = 0; i < c; i++) {
-			exec.execute(new RequestWechatUnionIdThread(isDebug, latch, i));
+			exec.execute(new RequestWechatUnionIdThread(isDebug, i));
 		}
 
-		try {
-			// 等待所有线程计算完毕
-			latch.await();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
+//		try {
+//			// 等待所有线程计算完毕
+//			latch.await();
+//		} catch (InterruptedException e) {
+//			e.printStackTrace();
+//		}
 	}
 
 }
