@@ -91,7 +91,7 @@ public class HandleH5Favs {
 			if (bufS[6].equalsIgnoreCase("NULL")) {
 				bufS[6] = "0";
 			}
-			writerCopy.write(bufS[0] + "#" + "0" + bufS[1] + "#" + bufS[2] + "#" + bufS[3] + "#" + bufS[4] + "#"
+			writerCopy.write(bufS[0] + "#" + "0#" + bufS[1] + "#" + bufS[2] + "#" + bufS[3] + "#" + bufS[4] + "#"
 					+ bufS[5] + "#" + bufS[6]);
 			writerCopy.newLine();
 			writerCopy.flush();
