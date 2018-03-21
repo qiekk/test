@@ -4,6 +4,11 @@
  */
 package com.bus.chelaile.thread;
 
+import java.io.BufferedWriter;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.bus.chelaile.HandleH5Favs;
@@ -16,12 +21,12 @@ public class RequestWechatUnionIdThread implements Runnable {
 	static final String URLGET = "https://api.weixin.qq.com/cgi-bin/user/info?access_token=%s&openid=%s&lang=zh_CN";
 
 	private boolean debug;
-//	private CountDownLatch cntLatch;
-	private int i ;
+	// private CountDownLatch cntLatch;
+	private int i;
 
 	public RequestWechatUnionIdThread(boolean Debug, int i) {
 		this.debug = Debug;
-//		this.cntLatch = cntLatch;
+		// this.cntLatch = cntLatch;
 		this.i = i;
 	}
 
@@ -34,8 +39,15 @@ public class RequestWechatUnionIdThread implements Runnable {
 				String openId = null;
 				try {
 					openId = CacheUtil.lpop(HandleH5Favs.POPKEY);
-					if (openId == null)
+					if (openId == null) {
+						System.out.println("*******************over ***************** ");
+						if(! HandleH5Favs.hasWrite) {
+							HandleH5Favs.hasWrite = true;
+							System.out.println("**** writer thread : i=" + i );
+							writeFile();
+						}
 						break;
+					}
 				} catch (Exception e) {
 					continue;
 				}
@@ -79,10 +91,57 @@ public class RequestWechatUnionIdThread implements Runnable {
 					continue;
 				}
 			}
-			System.out.println("############## thread num over ,i = " + i );
+			System.out.println("############## thread num over ,i = " + i);
 		} catch (Exception e1) {
 			e1.printStackTrace();
-		} 
+		}
+	}
+
+	private void writeFile() throws IOException {
+		// 生成新串，写文件
+		int handleN = 0;
+		int notHandleN = 0;
+		String fileOut = "/data/quekunkun/favzhuanyi/favout.txt";
+		String fileNoUnion = "/data/quekunkun/favzhuanyi/nounion.txt";
+		BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(fileOut), "utf-8"));
+		BufferedWriter writerNoUnion = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(fileNoUnion), "utf-8"));
+		for (String line : HandleH5Favs.lines) {
+			String sl[] = line.split("#");
+			if (sl[6].equalsIgnoreCase("NULL")) {
+				sl[6] = "0";
+			}
+			if (HandleH5Favs.OPENID_UNIONID.containsKey(sl[0])) {
+				String key = HandleH5Favs.OPENID_UNIONID.get(sl[0]).split("#")[0] + sl[1] + sl[2] + sl[3] + sl[4];
+				if (HandleH5Favs.KEYS.contains(key))
+					continue;
+
+				String record = HandleH5Favs.OPENID_UNIONID.get(sl[0]) + "#" + sl[1] + "#" + sl[2] + "#" + sl[3] + "#"
+						+ sl[4] + "#" + sl[5] + "#" + sl[6];
+				HandleH5Favs.KEYS.add(key);
+				writer.write(record);
+				handleN++;
+				writer.newLine();
+				writer.flush();
+			} else {
+				notHandleN++;
+				String key = sl[0] + sl[1] + sl[2] + sl[3] + sl[4];
+				String record = sl[0] + "#" + "0" + "#" + sl[1] + "#" + sl[2] + "#" + sl[3] + "#" + sl[4] + "#" + sl[5]
+						+ "#" + sl[6];
+				if (HandleH5Favs.KEYS.contains(key))
+					continue;
+
+				HandleH5Favs.KEYS.add(key);
+				writerNoUnion.write(record);
+				writerNoUnion.newLine();
+				writerNoUnion.flush();
+			}
+		}
+		writer.close();
+		writerNoUnion.close();
+
+		System.out.println("handle=" + handleN);
+		System.out.println("notHandle=" + notHandleN);
+
 	}
 
 	public boolean isDebug() {
@@ -93,13 +152,13 @@ public class RequestWechatUnionIdThread implements Runnable {
 		this.debug = debug;
 	}
 
-//	public CountDownLatch getCntLatch() {
-//		return cntLatch;
-//	}
-//
-//	public void setCntLatch(CountDownLatch cntLatch) {
-//		this.cntLatch = cntLatch;
-//	}
+	// public CountDownLatch getCntLatch() {
+	// return cntLatch;
+	// }
+	//
+	// public void setCntLatch(CountDownLatch cntLatch) {
+	// this.cntLatch = cntLatch;
+	// }
 
 	public int getI() {
 		return i;
