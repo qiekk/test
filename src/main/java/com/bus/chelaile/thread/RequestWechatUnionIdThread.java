@@ -29,6 +29,7 @@ public class RequestWechatUnionIdThread implements Runnable {
 
 	public void run() {
 		System.out.println("******************* thread num = " + i);
+		int count = 0;
 
 		try {
 			while (true) {
@@ -41,34 +42,42 @@ public class RequestWechatUnionIdThread implements Runnable {
 					continue;
 				}
 
-				int type = 1;
-				String w1Token = (String) CacheUtil.get1("WECHATSIGNATUREACCESSTOKEN");
-				String url = String.format(URLGET, w1Token, openId);
-				String response = Utilities.newHttpGet(url);
-				JSONObject resJ = JSON.parseObject(response);
-				if(debug)
-					System.out.println("response=" + response);
-				
-				String errorcode = resJ.getString("errcode");
-				String unionId = resJ.getString("unionid");
-				if (errorcode != null || unionId == null) {
-					type = 2;
-					String w2Token = (String) CacheUtil.get2("WECHATSIGNATUREACCESSTOKEN");
-					url = String.format(URLGET, w2Token, openId);
-					response = Utilities.newHttpGet(url);
-					resJ = JSON.parseObject(response);
-
-					if (isDebug())
+				try {
+					if (count % 1000 == 0)
+						System.out.println("thread:" + i + ", handledcount:" + count);
+					count++;
+					int type = 1;
+					String w1Token = (String) CacheUtil.get1("WECHATSIGNATUREACCESSTOKEN");
+					String url = String.format(URLGET, w1Token, openId);
+					String response = Utilities.newHttpGet(url);
+					JSONObject resJ = JSON.parseObject(response);
+					if (debug)
 						System.out.println("response=" + response);
 
-					errorcode = resJ.getString("errcode");
-					unionId = resJ.getString("unionid");
+					String errorcode = resJ.getString("errcode");
+					String unionId = resJ.getString("unionid");
 					if (errorcode != null || unionId == null) {
-						continue;
+						type = 2;
+						String w2Token = (String) CacheUtil.get2("WECHATSIGNATUREACCESSTOKEN");
+						url = String.format(URLGET, w2Token, openId);
+						response = Utilities.newHttpGet(url);
+						resJ = JSON.parseObject(response);
+
+						if (isDebug())
+							System.out.println("response=" + response);
+
+						errorcode = resJ.getString("errcode");
+						unionId = resJ.getString("unionid");
+						if (errorcode != null || unionId == null) {
+							continue;
+						}
 					}
+					// bu kaolv ziyuan chongtu
+					HandleH5Favs.OPENID_UNIONID.put(openId, unionId + "#" + type);
+				} catch (Exception e) {
+					e.printStackTrace();
+					continue;
 				}
-				// bu kaolv ziyuan chongtu
-				HandleH5Favs.OPENID_UNIONID.put(openId, unionId + "#" + type);
 			}
 			System.out.println("############## thread num over ,i = " + i );
 		} catch (Exception e1) {
