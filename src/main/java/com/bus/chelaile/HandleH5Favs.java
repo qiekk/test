@@ -89,6 +89,7 @@ public class HandleH5Favs {
 		for (String s : OPENIDSET) {
 			CacheUtil.lPush(POPKEY, s);
 		}
+		OPENIDSET.clear();
 		System.out.println("totalN=" + totalN);
 
 		// 调微信接口，openId对应unionId

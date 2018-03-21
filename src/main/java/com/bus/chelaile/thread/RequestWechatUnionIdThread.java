@@ -35,7 +35,6 @@ public class RequestWechatUnionIdThread implements Runnable {
 				String openId = null;
 				try {
 					openId = CacheUtil.lpop(HandleH5Favs.POPKEY);
-					System.out.println("openId = " + openId);
 					if (openId == null)
 						break;
 				} catch (Exception e) {
