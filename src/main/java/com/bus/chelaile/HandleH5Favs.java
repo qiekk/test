@@ -39,9 +39,11 @@ public class HandleH5Favs {
 	static BufferedReader reader;
 	static BufferedWriter writer;
 	static BufferedWriter writerNoUnion;
+	static BufferedWriter writerCopy;
 	static String fileIn = "/data/quekunkun/favzhuanyi/favFile.txt";
 	static String fileOut = "/data/quekunkun/favzhuanyi/favout.txt";
 	static String fileNoUnion = "/data/quekunkun/favzhuanyi/nounion.txt";
+	static String fileCopy = "/data/quekunkun/favzhuanyi/copy.txt";
 	static boolean isDebug = false;
 
 	public static void main(String[] args) throws Exception {
@@ -70,6 +72,7 @@ public class HandleH5Favs {
 		reader = new BufferedReader(new InputStreamReader(new FileInputStream(fileIn), "utf-8"));
 		writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(fileOut), "utf-8"));
 		writerNoUnion = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(fileNoUnion), "utf-8"));
+		writerCopy = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(fileCopy), "utf-8"));
 		int handleN = 0;
 		int notHandleN = 0;
 		int totalN = 0;
@@ -83,6 +86,15 @@ public class HandleH5Favs {
 			String bufS[] = buf.split("#");
 			lines.add(buf);
 			OPENIDSET.add(bufS[0]);
+			
+			// copy file
+			if (bufS[6].equalsIgnoreCase("NULL")) {
+				bufS[6] = "0";
+			}
+			writerCopy.write(bufS[0] + "#" + "0" + bufS[1] + "#" + bufS[2] + "#" + bufS[3] + "#" + bufS[4] + "#"
+					+ bufS[5] + "#" + bufS[6]);
+			writerCopy.newLine();
+			writerCopy.flush();
 		}
 		reader.close();
 		// redis duoxiancheng

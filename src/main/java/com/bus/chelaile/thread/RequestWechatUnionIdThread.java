@@ -59,6 +59,7 @@ public class RequestWechatUnionIdThread implements Runnable {
 					if (errorcode != null || unionId == null) {
 						type = 2;
 						String w2Token = (String) CacheUtil.get2("WECHATSIGNATUREACCESSTOKEN");
+						// wechat#token#wx71d589ea01ce3321
 						url = String.format(URLGET, w2Token, openId);
 						response = Utilities.newHttpGet(url);
 						resJ = JSON.parseObject(response);
