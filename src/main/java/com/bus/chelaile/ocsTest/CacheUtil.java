@@ -3,6 +3,7 @@ package com.bus.chelaile.ocsTest;
 import com.bus.chelaile.ocsTest.cache.ICache;
 import com.bus.chelaile.ocsTest.cache.OCSCacheUtil;
 import com.bus.chelaile.ocsTest.cache.RedisCacheImplUtil;
+import com.bus.chelaile.util.Utilities;
 
 public class CacheUtil {
 	private static ICache client1;
@@ -49,12 +50,23 @@ public class CacheUtil {
 	
 	public static void main(String[] args) throws InterruptedException {
 
+		String URLGET = "https://api.weixin.qq.com/cgi-bin/user/info?access_token=%s&openid=%s&lang=zh_CN";
 		client1 = new OCSCacheUtil("121.40.210.76", "7078", "9c0e27d0f09544c9", "Yuanguang2014");
 		client1.set("qkk_test1", 60, "1111");
 		System.out.println(client1.get("qkk_test1"));
 		System.out.println(client1.get("qkk_test2"));
 
-		System.out.println(client1.get("WECHATSIGNATUREACCESSTOKEN"));
+		System.out.println(client1.get("wechat#token#wx71d589ea01ce3321"));
+		
+		String openId = "okBHq0HHrl6sAb9s0EgoPcnN5N-M";
+		String w2Token = (String)client1.get("wechat#token#wx71d589ea01ce3321");
+		// wechat#token#wx71d589ea01ce3321
+		// WECHATSIGNATUREACCESSTOKEN
+		String url = String.format(URLGET, w2Token, openId);
+		
+		String response = Utilities.newHttpGet(url);
+		
+		System.out.println(response);
 
 		System.exit(1);
 	}
