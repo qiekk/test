@@ -117,7 +117,6 @@ public class HandleH5Favs {
 		for (int i = 0; i < c; i++) {
 			exec.execute(new RequestWechatUnionIdThread(isDebug, i));
 		}
-
 //		try {
 //			// 等待所有线程计算完毕
 //			latch.await();
